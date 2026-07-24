@@ -8,6 +8,12 @@ public class Main {
         writeMethodsBeginningWithInvalidCharacters();
         writeClassInterlacedWithValidCharacters();
         writeClassBeginningWithValidCharacters();
+        writeValidCharsToFile("valid.txt", c -> Character.isJavaIdentifierPart(c) && !Character.isAlphabetic(c)
+               && !(Character.getType(c) == Character.NON_SPACING_MARK ||
+                        Character.getType(c) == Character.COMBINING_SPACING_MARK ||
+                        Character.getType(c) == Character.ENCLOSING_MARK ||
+                        Character.getType(c) == Character.FORMAT ||
+                        Character.getType(c) == Character.CONTROL));
     }
 
 
@@ -23,20 +29,18 @@ public class Main {
         writeClassToFile("BeginningOk", c -> Character.isJavaIdentifierStart(c) && !Character.isAlphabetic(c), c -> String.format("void %sa(){}", c));
     }
 
-    public static void writeValidCharsToFile() {
-        StringBuilder startChars = new StringBuilder().append("Starting characters:");
-        StringBuilder lettersOrDigits = new StringBuilder().append("Numbers & letters:");
+    public static void writeValidCharsToFile(String name, Predicate<Character> predicate) {
+        StringBuilder result = new StringBuilder();
 
         for (int ch = Character.MIN_CODE_POINT; ch <= Character.MAX_CODE_POINT; ch++) {
             char[] chars = Character.toChars(ch);
             for(char c : chars)
             {
-                if(Character.isJavaIdentifierStart(c)) startChars.append(c);
-                if(Character.isJavaLetterOrDigit(c)) lettersOrDigits.append(c);
+                if(predicate.test(c)) result.append(c);
             }
         }
 
-        recklessFileWrite("validchars.txt", startChars.append(lettersOrDigits).toString());
+        recklessFileWrite(name, result.toString());
     }
 
     public static void writeClassToFile(String name, Predicate<Character> predicate, Function<Character, String> methodName) {
