@@ -5,10 +5,10 @@ import java.util.function.Predicate;
 
 public class Main {
     public static void main(String[] args) {
-        writeMethodsBeginningWithInvalidCharacters("ClassesMayNotBeginWithThisIdentifier");
+        writeMethodsBeginningWithInvalidCharacters();
+        writeClassInterlacedWithValidCharacters();
+        writeClassBeginningWithValidCharacters();
     }
-
-
 
 
     public static void writeClassInterlacedWithValidCharacters() {
@@ -21,19 +21,6 @@ public class Main {
 
     public static void writeClassBeginningWithValidCharacters() {
         writeClassToFile("BeginningOk", Character::isJavaIdentifierStart, c -> String.format("void %sa(){}", c));
-    }
-
-    public static void writeClassToFile(String name, Predicate<Character> predicate, Function<Character, String> methodName) {
-        StringBuilder sb = new StringBuilder().append(String.format("\"public class %s {\\n\"", name));
-        for (int ch = Character.MIN_CODE_POINT; ch <= Character.MAX_CODE_POINT; ch++) {
-            char[] chars = Character.toChars(ch);
-            for(char c : chars)
-            {
-                if(predicate.test(c)) sb.append(methodName.apply(c)).append("\n");
-            }
-        }
-        sb.append("}");
-        recklessFileWrite(String.format("%s.java",name), sb.toString());
     }
 
     public static void writeValidCharsToFile() {
@@ -50,6 +37,19 @@ public class Main {
         }
 
         recklessFileWrite("validchars.txt", startChars.append(lettersOrDigits).toString());
+    }
+
+    public static void writeClassToFile(String name, Predicate<Character> predicate, Function<Character, String> methodName) {
+        StringBuilder sb = new StringBuilder().append(String.format("public class %s {\n", name));
+        for (int ch = Character.MIN_CODE_POINT; ch <= Character.MAX_CODE_POINT; ch++) {
+            char[] chars = Character.toChars(ch);
+            for(char c : chars)
+            {
+                if(predicate.test(c)) sb.append(methodName.apply(c)).append("\n");
+            }
+        }
+        sb.append("}");
+        recklessFileWrite(String.format("%s.java",name), sb.toString());
     }
 
     public static void recklessFileWrite(String name, String contents) {
