@@ -12,15 +12,15 @@ public class Main {
 
 
     public static void writeClassInterlacedWithValidCharacters() {
-        writeClassToFile("InterlacedOk", Character::isJavaLetterOrDigit, c -> String.format("void a%sb(){}", c));
+        writeClassToFile("InterlacedOk", c -> Character.isJavaIdentifierPart(c) && !Character.isAlphabetic(c), c -> String.format("void a%sb(){}", c));
     }
 
     public static void writeMethodsBeginningWithInvalidCharacters() {
-        writeClassToFile("BeginningNotOk", c -> !Character.isJavaIdentifierStart(c), c -> String.format("void %sa(){}", c));
+        writeClassToFile("BeginningNotOk", c -> !Character.isJavaIdentifierStart(c) && !Character.isAlphabetic(c), c -> String.format("void %sa(){}", c));
     }
 
     public static void writeClassBeginningWithValidCharacters() {
-        writeClassToFile("BeginningOk", Character::isJavaIdentifierStart, c -> String.format("void %sa(){}", c));
+        writeClassToFile("BeginningOk", c -> Character.isJavaIdentifierStart(c) && !Character.isAlphabetic(c), c -> String.format("void %sa(){}", c));
     }
 
     public static void writeValidCharsToFile() {
