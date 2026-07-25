@@ -4,29 +4,26 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Main {
+    public static final Predicate<Character> defaultPredicate = c -> !(Character.isAlphabetic(c) || Character.getType(c) == Character.NON_SPACING_MARK || Character.getType(c) == Character.COMBINING_SPACING_MARK || Character.getType(c) == Character.ENCLOSING_MARK || Character.getType(c) == Character.FORMAT || Character.getType(c) == Character.CONTROL);
+
     public static void main(String[] args) {
         writeMethodsBeginningWithInvalidCharacters();
         writeClassInterlacedWithValidCharacters();
         writeClassBeginningWithValidCharacters();
-        writeValidCharsToFile("valid.txt", c -> Character.isJavaIdentifierPart(c) && !Character.isAlphabetic(c)
-               && !(Character.getType(c) == Character.NON_SPACING_MARK ||
-                        Character.getType(c) == Character.COMBINING_SPACING_MARK ||
-                        Character.getType(c) == Character.ENCLOSING_MARK ||
-                        Character.getType(c) == Character.FORMAT ||
-                        Character.getType(c) == Character.CONTROL));
+        writeValidCharsToFile("valid.txt", c -> Character.isJavaIdentifierPart(c) && defaultPredicate.test(c));
     }
 
 
     public static void writeClassInterlacedWithValidCharacters() {
-        writeClassToFile("InterlacedOk", c -> Character.isJavaIdentifierPart(c) && !Character.isAlphabetic(c), c -> String.format("void a%sb(){}", c));
+        writeClassToFile("InterlacedOk", c -> Character.isJavaIdentifierPart(c) && defaultPredicate.test(c), c -> String.format("void a%sb(){}", c));
     }
 
     public static void writeMethodsBeginningWithInvalidCharacters() {
-        writeClassToFile("BeginningNotOk", c -> !Character.isJavaIdentifierStart(c) && !Character.isAlphabetic(c), c -> String.format("void %sa(){}", c));
+        writeClassToFile("BeginningNotOk", c -> !Character.isJavaIdentifierStart(c) && defaultPredicate.test(c), c -> String.format("void %sa(){}", c));
     }
 
     public static void writeClassBeginningWithValidCharacters() {
-        writeClassToFile("BeginningOk", c -> Character.isJavaIdentifierStart(c) && !Character.isAlphabetic(c), c -> String.format("void %sa(){}", c));
+        writeClassToFile("BeginningOk", c -> Character.isJavaIdentifierStart(c) && defaultPredicate.test(c), c -> String.format("void %sa(){}", c));
     }
 
     public static void writeValidCharsToFile(String name, Predicate<Character> predicate) {
