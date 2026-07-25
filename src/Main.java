@@ -10,7 +10,8 @@ public class Main {
         writeMethodsBeginningWithInvalidCharacters();
         writeClassInterlacedWithValidCharacters();
         writeClassBeginningWithValidCharacters();
-        writeValidCharsToFile("valid.txt", c -> Character.isJavaIdentifierPart(c) && defaultPredicate.test(c));
+        writeValidCharsToFile("valid_part.txt", c -> Character.isJavaIdentifierPart(c) && defaultPredicate.test(c));
+        writeValidCharsToFile("valid_start.txt", c -> Character.isJavaIdentifierStart(c) && defaultPredicate.test(c));
     }
 
 
