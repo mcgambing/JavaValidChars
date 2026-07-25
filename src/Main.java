@@ -10,8 +10,8 @@ public class Main {
         writeMethodsBeginningWithInvalidCharacters();
         writeClassInterlacedWithValidCharacters();
         writeClassBeginningWithValidCharacters();
-        writeValidCharsToFile("valid_part.txt", c -> Character.isJavaIdentifierPart(c) && defaultPredicate.test(c));
-        writeValidCharsToFile("valid_start.txt", c -> Character.isJavaIdentifierStart(c) && defaultPredicate.test(c));
+        writeValidCharsToFile("valid_part", c -> Character.isJavaIdentifierPart(c) && defaultPredicate.test(c));
+        writeValidCharsToFile("valid_start", c -> Character.isJavaIdentifierStart(c) && defaultPredicate.test(c));
     }
 
 
@@ -28,30 +28,29 @@ public class Main {
     }
 
     public static void writeValidCharsToFile(String name, Predicate<Character> predicate) {
-        StringBuilder result = new StringBuilder();
-
-        for (int ch = Character.MIN_CODE_POINT; ch <= Character.MAX_CODE_POINT; ch++) {
-            char[] chars = Character.toChars(ch);
-            for(char c : chars)
-            {
-                if(predicate.test(c)) result.append(c);
-            }
-        }
-
-        recklessFileWrite(name, result.toString());
+        writeCharsToFile(String.format("%s.txt", name), "", "", predicate, String::valueOf);
     }
 
     public static void writeClassToFile(String name, Predicate<Character> predicate, Function<Character, String> methodName) {
-        StringBuilder sb = new StringBuilder().append(String.format("public class %s {\n", name));
+        writeCharsToFile(String.format("%s.java", name), String.format("public class %s {\n", name), "}", predicate, c -> methodName.apply(c)+"\n");
+    }
+
+
+    //HELPERS
+
+    public static void writeCharsToFile(String fileName, String beginning, String end, Predicate<Character> predicate, Function<Character, String> line) {
+        StringBuilder sb = new StringBuilder().append(beginning);
+
         for (int ch = Character.MIN_CODE_POINT; ch <= Character.MAX_CODE_POINT; ch++) {
             char[] chars = Character.toChars(ch);
             for(char c : chars)
             {
-                if(predicate.test(c)) sb.append(methodName.apply(c)).append("\n");
+                if(predicate.test(c)) sb.append(line.apply(c));
             }
         }
-        sb.append("}");
-        recklessFileWrite(String.format("%s.java",name), sb.toString());
+
+        sb.append(end);
+        recklessFileWrite(fileName, sb.toString());
     }
 
     public static void recklessFileWrite(String name, String contents) {
