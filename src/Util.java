@@ -6,8 +6,6 @@ import java.util.function.Predicate;
 public class Util {
     private Util(){}
 
-
-
     public static void writeClassToFile(String name, Predicate<Character> predicate, Function<Character, String> methodName) {
         Util.writeCharsToFile(String.format("%s.java", name), String.format("public class %s {\n", name), "}", predicate, c -> methodName.apply(c)+"\n");
     }

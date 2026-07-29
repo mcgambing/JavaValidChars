@@ -16,7 +16,7 @@ public class Main {
     }
 
     public static void writeMethodsBeginningWithInvalidCharacters() {
-        Util.writeClassToFile("BeginningNotOk", c -> !Character.isJavaIdentifierStart(c) && defaultPredicate.test(c), c -> String.format("void %sa(){}", c));
+        Util.writeClassToFile("BeginningNotOk", c -> defaultPredicate.test(c) && !Character.isJavaIdentifierStart(c), c -> String.format("void %sa(){}", c));
     }
 
     public static void writeClassBeginningWithValidCharacters() {

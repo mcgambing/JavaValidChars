@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FindCurrencies:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FindCurrencies_jar</output-path>
+    <root id="archive" name="FindCurrencies.jar">
+      <element id="module-output" name="FindCurrencies" />
+    </root>
+  </artifact>
+</component>
